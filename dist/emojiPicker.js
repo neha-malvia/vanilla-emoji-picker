@@ -57,12 +57,52 @@
         });
       }
     }, {
+      key: "paste",
+      value: function paste(html) {
+        var sel, range;
+        if (window.getSelection) {
+          // IE9 and non-IE
+          sel = window.getSelection();
+          if (sel.getRangeAt && sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+
+            var el = document.createElement("div");
+            el.innerHTML = html;
+            var frag = document.createDocumentFragment(),
+                node,
+                lastNode;
+            while (node = el.firstChild) {
+              lastNode = frag.appendChild(node);
+            }
+            range.insertNode(frag);
+
+            if (lastNode) {
+              range = range.cloneRange();
+              range.setStartAfter(lastNode);
+              range.collapse(true);
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+          }
+        } else if (document.selection && document.selection.type != "Control") {
+          document.selection.createRange().pasteHTML(html);
+        }
+      }
+    }, {
       key: "generateElements",
       value: function generateElements(emojiInput) {
+        var _this2 = this;
+
         var clickLink = function clickLink(event) {
           event.preventDefault();
-          var caretPos = emojiInput.selectionStart;
-          emojiInput.value = emojiInput.value.substring(0, caretPos) + " " + event.target.innerHTML + emojiInput.value.substring(caretPos);
+          if (emojiInput.localName === "div" || emojiInput.nodeName === "DIV") {
+            emojiInput.focus();
+            _this2.paste(event.target.innerHTML);
+          } else {
+            var caretPos = emojiInput.selectionStart;
+            emojiInput.value = emojiInput.value.substring(0, caretPos) + " " + event.target.innerHTML + emojiInput.value.substring(caretPos);
+          }
           emojiPicker.style.display = "none";
           emojiInput.focus();
 
@@ -110,7 +150,7 @@
         emojiTrigger.style.right = "2px";
         emojiTrigger.style.textDecoration = "none";
         emojiTrigger.setAttribute("href", "javascript:void(0)");
-        emojiTrigger.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 12 14"><path d="M8.9 8.4q-0.3 0.9-1.1 1.5t-1.8 0.6-1.8-0.6-1.1-1.5q-0.1-0.2 0-0.4t0.3-0.2q0.2-0.1 0.4 0t0.2 0.3q0.2 0.6 0.7 1t1.2 0.4 1.2-0.4 0.7-1q0.1-0.2 0.3-0.3t0.4 0 0.3 0.2 0 0.4zM5 5q0 0.4-0.3 0.7t-0.7 0.3-0.7-0.3-0.3-0.7 0.3-0.7 0.7-0.3 0.7 0.3 0.3 0.7zM9 5q0 0.4-0.3 0.7t-0.7 0.3-0.7-0.3-0.3-0.7 0.3-0.7 0.7-0.3 0.7 0.3 0.3 0.7zM11 7q0-1-0.4-1.9t-1.1-1.6-1.6-1.1-1.9-0.4-1.9 0.4-1.6 1.1-1.1 1.6-0.4 1.9 0.4 1.9 1.1 1.6 1.6 1.1 1.9 0.4 1.9-0.4 1.6-1.1 1.1-1.6 0.4-1.9zM12 7q0 1.6-0.8 3t-2.2 2.2-3 0.8-3-0.8-2.2-2.2-0.8-3 0.8-3 2.2-2.2 3-0.8 3 0.8 2.2 2.2 0.8 3z"/></svg>';
+        emojiTrigger.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 12 14"><path fill="#2C5CC5" d="M8.9 8.4q-0.3 0.9-1.1 1.5t-1.8 0.6-1.8-0.6-1.1-1.5q-0.1-0.2 0-0.4t0.3-0.2q0.2-0.1 0.4 0t0.2 0.3q0.2 0.6 0.7 1t1.2 0.4 1.2-0.4 0.7-1q0.1-0.2 0.3-0.3t0.4 0 0.3 0.2 0 0.4zM5 5q0 0.4-0.3 0.7t-0.7 0.3-0.7-0.3-0.3-0.7 0.3-0.7 0.7-0.3 0.7 0.3 0.3 0.7zM9 5q0 0.4-0.3 0.7t-0.7 0.3-0.7-0.3-0.3-0.7 0.3-0.7 0.7-0.3 0.7 0.3 0.3 0.7zM11 7q0-1-0.4-1.9t-1.1-1.6-1.6-1.1-1.9-0.4-1.9 0.4-1.6 1.1-1.1 1.6-0.4 1.9 0.4 1.9 1.1 1.6 1.6 1.1 1.9 0.4 1.9-0.4 1.6-1.1 1.1-1.6 0.4-1.9zM12 7q0 1.6-0.8 3t-2.2 2.2-3 0.8-3-0.8-2.2-2.2-0.8-3 0.8-3 2.2-2.2 3-0.8 3 0.8 2.2 2.2 0.8 3z"/></svg>';
         emojiTrigger.onclick = function () {
           if (emojiPicker.style.display === "none") {
             emojiPicker.style.display = "block";
