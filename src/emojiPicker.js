@@ -7,8 +7,8 @@ class EmojiPicker {
     const emojiInputs = document.querySelectorAll('[data-emoji-picker="true"]');
 
     emojiInputs.forEach(element => {
-      let top = element.getAttribute("top");
-      let right = element.getAttribute("right");
+      let top = element.getAttribute("top") ? element.getAttribute("top") : "2px";
+      let right = element.getAttribute("right") ? element.getAttribute("right") : "2px";
       this.generateElements(element,top,right);
     });
   }

@@ -29,3 +29,8 @@ Then execute this command to initiate the plugin:
 ```js
 new EmojiPicker();
 ```
+## Major Changes
+
+The attribute `data-emoji-picker="true"` will also work for div with contenteditable="true".
+
+The attributes `top=""` and `right=""` inside the tag will provide the custom placement for the emoji picker. By default, it is 2px in case of not provided.

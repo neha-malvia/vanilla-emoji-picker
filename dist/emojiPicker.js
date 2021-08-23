@@ -53,8 +53,8 @@
         var emojiInputs = document.querySelectorAll('[data-emoji-picker="true"]');
 
         emojiInputs.forEach(function (element) {
-          var top = element.getAttribute("top");
-          var right = element.getAttribute("right");
+          var top = element.getAttribute("top") ? element.getAttribute("top") : "2px";
+          var right = element.getAttribute("right") ? element.getAttribute("right") : "2px";
           _this.generateElements(element, top, right);
         });
       }
