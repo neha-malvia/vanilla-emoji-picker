@@ -7,7 +7,9 @@ class EmojiPicker {
     const emojiInputs = document.querySelectorAll('[data-emoji-picker="true"]');
 
     emojiInputs.forEach(element => {
-      this.generateElements(element);
+      let top = element.getAttribute("top");
+      let right = element.getAttribute("right");
+      this.generateElements(element,top,right);
     });
   }
   paste(html) {
@@ -40,7 +42,7 @@ class EmojiPicker {
     }
 }
 
-  generateElements(emojiInput) {
+  generateElements(emojiInput,top,right) {
     const clickLink = event => {
       event.preventDefault();
       if(emojiInput.localName==="div" || emojiInput.nodeName==="DIV"){
@@ -102,8 +104,8 @@ class EmojiPicker {
 
     const emojiTrigger = document.createElement("a");
     emojiTrigger.style.position = "absolute";
-    emojiTrigger.style.top = "2px";
-    emojiTrigger.style.right = "2px";
+    emojiTrigger.style.top = top;
+    emojiTrigger.style.right = right;
     emojiTrigger.style.textDecoration = "none";
     emojiTrigger.setAttribute("href", "javascript:void(0)");
     emojiTrigger.innerHTML =
